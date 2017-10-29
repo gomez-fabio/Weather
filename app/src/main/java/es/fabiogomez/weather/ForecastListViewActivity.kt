@@ -41,6 +41,8 @@ class ForecastListViewActivity : AppCompatActivity() {
             }
         }
 
-        retriever.getForecast(callback)
+        val searchTerm = intent.extras.getString("searchTerm")
+
+        retriever.getForecast(callback, searchTerm)
     }
 }
