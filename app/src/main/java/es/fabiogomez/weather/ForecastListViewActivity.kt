@@ -4,6 +4,9 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ForecastListViewActivity : AppCompatActivity() {
 
@@ -11,19 +14,33 @@ class ForecastListViewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forecast_list_view)
 
-        var forecastListView = findViewById<ListView>(R.id.forecastListView)
+        var retriever = WeatherRetriever()
 
-//        var randomThings: List<String> = listOf("Hello", "How are you", "Nice to meet you", "Hasta la vista")
-//
-//        var adapter = ArrayAdapter(this,android.R.layout.simple_list_item_1,randomThings)
-//
-//        forecastListView.adapter = adapter
+        val callback = object : Callback<Weather> {
+            override fun onResponse(call: Call<Weather>?, response: Response<Weather>?) {
 
+                title = response?.body()?.query?.results?.channel?.title
 
-        var favouritesMovies = listOf<String>("Alien", "Pulp Fiction", "Blade Runner", "Black Hawk Down", "Inception")
+                var forecasts = response?.body()?.query?.results?.channel?.item?.forecast
 
-        var adapter = ArrayAdapter(this,android.R.layout.simple_list_item_1,favouritesMovies)
+                var forecastStrings = mutableListOf<String>()
 
-        forecastListView.adapter = adapter
+                if (forecasts != null) {
+                    for (forecast in forecasts) {
+                        var newString ="${forecast.day} ${forecast.date} - Max:${forecast.high} Min:${forecast.low} - ${forecast.text}"
+                        forecastStrings.add(newString)
+                    }
+                }
+
+                var forecastListView = findViewById<ListView>(R.id.forecastListView)
+                var adapter = ArrayAdapter(this@ForecastListViewActivity,android.R.layout.simple_list_item_1,forecastStrings)
+                forecastListView.adapter = adapter
+            }
+            override fun onFailure(call: Call<Weather>?, t: Throwable?) {
+                println("It doesn´t work")
+            }
+        }
+
+        retriever.getForecast(callback)
     }
 }
