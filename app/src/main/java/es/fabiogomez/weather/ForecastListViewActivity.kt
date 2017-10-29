@@ -13,9 +13,16 @@ class ForecastListViewActivity : AppCompatActivity() {
 
         var forecastListView = findViewById<ListView>(R.id.forecastListView)
 
-        var randomThings: List<String> = listOf("Hello", "How are you", "Nice to meet you", "Hasta la vista")
+//        var randomThings: List<String> = listOf("Hello", "How are you", "Nice to meet you", "Hasta la vista")
+//
+//        var adapter = ArrayAdapter(this,android.R.layout.simple_list_item_1,randomThings)
+//
+//        forecastListView.adapter = adapter
 
-        var adapter = ArrayAdapter(this,android.R.layout.simple_list_item_1,randomThings)
+
+        var favouritesMovies = listOf<String>("Alien", "Pulp Fiction", "Blade Runner", "Black Hawk Down", "Inception")
+
+        var adapter = ArrayAdapter(this,android.R.layout.simple_list_item_1,favouritesMovies)
 
         forecastListView.adapter = adapter
     }
